@@ -54,6 +54,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .bias{margin:10px 12px;padding:14px 16px;background:linear-gradient(135deg,rgba(240,192,96,0.06),rgba(212,168,83,0.02));border:1px solid rgba(240,192,96,0.15);border-radius:12px;font-size:12px;line-height:1.7}
 .bias b{color:var(--gold)}
 .section-label{font-size:11px;color:var(--sub);padding:16px 16px 4px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.pos-card{border-left:2px solid var(--gold)}
+.watch-card{border-left:2px solid transparent}
+.divider{margin:8px 12px;height:1px;background:linear-gradient(90deg,transparent,rgba(240,192,96,0.3),transparent)}
 .btm{position:sticky;bottom:0;z-index:99;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--sub)}
 .btm .chip{padding:4px 12px;border-radius:12px;font-size:10px;font-weight:700}
 .btm .chip.live{background:rgba(46,213,115,0.12);color:#2ed573}
@@ -92,9 +95,11 @@ var POS=[
 ];
 var WATCH=[
   {c:'600988',m:1,n:'赤峰黄金'},{c:'600900',m:1,n:'长江电力'},
-  {c:'000767',m:0,n:'晋控电力'},{c:'000063',m:0,n:'中兴'},
+  {c:'600118',m:1,n:'中国卫星'},{c:'600141',m:1,n:'兴发集团'},
   {c:'600096',m:1,n:'云天化'},{c:'600160',m:1,n:'巨化股份'},
-  {c:'600141',m:1,n:'兴发集团'}
+  {c:'002150',m:0,n:'正泰电源'},{c:'002458',m:0,n:'益生股份'},
+  {c:'600030',m:1,n:'中信证券'},{c:'000776',m:0,n:'广发证券'},
+  {c:'601225',m:1,n:'陕西煤业'}
 ];
 var ETF=[
   {c:'588000',m:1,n:'科创50'},{c:'510300',m:1,n:'沪深300'},
@@ -156,13 +161,13 @@ function render(){
     if(held&&s.cost){tags='<span class="tag cost">成本'+s.cost+'</span><span class="tag hold">'+s.sh+'股</span>'}
     if(sg)tags+='<span class="tag sig" style="background:'+(sg.cl||'#f0c060')+'15;color:'+(sg.cl||'#f0c060')+'">'+sg.sg+'</span>';
     var pnl='';if(held&&s.cost&&s.sh&&d.price){var pct=(d.price-s.cost)/s.cost*100,amt=(d.price-s.cost)*s.sh;pnl='<div class="qc-pnl" style="color:'+(pct>=0?'#ff4757':'#2ed573')+'">浮'+(pct>=0?'盈':'亏')+' '+f(pct,1)+'% | '+f(amt,0)+'元</div>'}
-    return'<div class="qc"><div class="qc-main"><div class="L"><div class="N">'+s.n+' '+tags+'</div><div class="sub">'+s.c+'</div></div><div class="pr" style="color:'+cl+'">'+f(d.price)+'</div></div>'+pnl+'<div class="qc-meta"><span>今开<b>'+f(d.open)+'</b></span><span>最高<b>'+f(d.high)+'</b></span><span>最低<b>'+f(d.low)+'</b></span><span>昨收<b>'+f(d.close)+'</b></span></div></div>';
+    var cardCls=held?'qc pos-card':'qc watch-card';return'<div class="'+cardCls+'"><div class="qc-main"><div class="L"><div class="N">'+s.n+' '+tags+'</div><div class="sub">'+s.c+'</div></div><div class="pr" style="color:'+cl+'">'+f(d.price)+'</div></div>'+pnl+'<div class="qc-meta"><span>今开<b>'+f(d.open)+'</b></span><span>最高<b>'+f(d.high)+'</b></span><span>最低<b>'+f(d.low)+'</b></span><span>昨收<b>'+f(d.close)+'</b></span></div></div>';
   }
 
   var ph='',tv=0,tp=0;
   POS.forEach(function(s){var d=s._d;if(d&&d.price&&s.cost&&s.sh){tv+=d.price*s.sh;tp+=(d.price-s.cost)*s.sh}ph+=card(s,true)});
-  ph='<div class="section-label">持仓 · 市值'+f(tv,0)+'元 <span style="color:'+(tp>=0?'#ff4757':'#2ed573')+'">浮'+(tp>=0?'盈':'亏')+' '+f(tp,0)+'元</span></div>'+ph;
-  var wh='<div class="section-label">关注个股</div>';WATCH.forEach(function(s){wh+=card(s,false)});
+  ph='<div class="section-label">💰 持仓 · 市值'+f(tv,0)+'元 <span style="color:'+(tp>=0?'#ff4757':'#2ed573')+'">浮'+(tp>=0?'盈':'亏')+' '+f(tp,0)+'元</span></div>'+ph;
+  var wh='<div class="divider"></div><div class="section-label">👀 关注标的</div>';WATCH.forEach(function(s){wh+=card(s,false)});
   var eh='<div class="section-label">ETF</div>';ETF.forEach(function(s){eh+=card(s,false)});
 
   var sh='';
