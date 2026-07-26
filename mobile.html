@@ -23,7 +23,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .idx-item .p{font-size:16px;font-weight:800;margin-bottom:2px}
 .idx-item .c{font-size:10px;font-weight:600}
 .tab-wrap{position:sticky;top:50px;z-index:98;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:6px 12px;display:flex;gap:6px}
-.tab-btn{flex:1;padding:10px 0;font-size:14px;font-weight:700;color:var(--sub);background:transparent;border:none;border-radius:10px;cursor:pointer;text-align:center;transition:all 0.2s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.tab-btn{flex:1;padding:10px 0;font-size:13px;font-weight:700;color:var(--sub);background:transparent;border:none;border-radius:10px;cursor:pointer;text-align:center;transition:all 0.2s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 .tab-btn:active{background:rgba(255,255,255,0.05)}
 .tab-btn.on{color:var(--gold);background:rgba(240,192,96,0.1);box-shadow:0 0 20px rgba(240,192,96,0.1)}
 .qc{margin:10px 12px;border-radius:14px;background:var(--card);border:1px solid var(--border);overflow:hidden;position:relative;backdrop-filter:blur(10px)}
@@ -54,6 +54,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .bias{margin:10px 12px;padding:14px 16px;background:linear-gradient(135deg,rgba(240,192,96,0.06),rgba(212,168,83,0.02));border:1px solid rgba(240,192,96,0.15);border-radius:12px;font-size:12px;line-height:1.7}
 .bias b{color:var(--gold)}
 .section-label{font-size:11px;color:var(--sub);padding:16px 16px 4px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.wl-actions{display:flex;gap:2px;margin-left:8px}
+.wl-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text-muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:0;line-height:1}
+.wl-btn:active{background:rgba(240,192,96,0.2);color:var(--gold)}
+.wl-btn.hl-on{background:rgba(240,192,96,0.2);color:var(--gold);border-color:var(--gold)}
+.qc.highlighted{border-color:var(--gold);box-shadow:0 0 12px rgba(240,192,96,0.15)}
 .btm{position:sticky;bottom:0;z-index:99;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--sub)}
 .btm .chip{padding:4px 12px;border-radius:12px;font-size:10px;font-weight:700}
 .btm .chip.live{background:rgba(46,213,115,0.12);color:#2ed573}
@@ -63,11 +68,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:10px 24px;border-radius:24px;font-size:13px;font-weight:700;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 8px 30px rgba(240,192,96,0.3)}
 .toast.show{opacity:1}
 .ft{text-align:center;font-size:10px;color:var(--sub);padding:12px;opacity:0.5}
-.wl-actions{display:flex;gap:2px;margin-left:8px}
-.wl-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text-muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:0;line-height:1}
-.wl-btn:active{background:rgba(240,192,96,0.2);color:var(--gold)}
-.wl-btn.hl-on{background:rgba(240,192,96,0.2);color:var(--gold);border-color:var(--gold)}
-.qc.highlighted{border-color:var(--gold);box-shadow:0 0 12px rgba(240,192,96,0.15)}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .qc,.sc{animation:slideUp 0.3s ease-out}
 </style>
@@ -90,6 +90,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 <div class="toast" id="toast"></div>
 
 <script>
+// ═══════ 配置 ═══════
 var POS=[
   {c:'000066',m:0,n:'中国长城',cost:24.8083,sh:400},
   {c:'159819',m:0,n:'AI ETF',cost:2.033,sh:4800},
@@ -114,42 +115,48 @@ var IDX=[
   {c:'399006',m:0,n:'创业板'},{c:'000688',m:1,n:'科创50'}
 ];
 var STRAT={
-  updated:'2026-07-23 23:00',
-  bias:'周五+长鑫下周一上市=全线防守。本周七天七方向无一重复：周一煤炭→周二半导体+19%→周三黄金+6%→周四锂矿/有色+64.5亿+电网+5%。电力唯一跨周主线(火电→电网→核电)。有色/锂矿今日最强但周五不追。长城15元守住筑底。大唐四连阳。AI ETF反弹减仓留现金。赤峰三天+20%已飞。长鑫抽血周一科技承压，现金留到周一捡漏。',
+  updated:'2026-07-24 23:00',
+  bias:'周五黄金/有色-5%全线暴跌，周四涨的全吐。半导体+3.6%反弹=资金提前押注长鑫。大唐四连阳后跌停-10%。全周无一方向连涨两天。下周长鑫上市=最大不确定性。周一防守为主，现金等周二捡漏。',
   pos:[
-    {c:'000066',sg:'15元守住·不动',cl:'#f0c060',act:'400股持有不动',entry:'成本24.81，今天-1.4%到15.06。三阳后正常回踩。15元没破。',stop:'不加不补',target:'反弹到17-18减仓100股',note:'长鑫上市周一可能被误伤。不恐慌不割肉。'},
-    {c:'159819',sg:'反弹减仓留现金',cl:'#f0c060',act:'明天1.95+减1600股',entry:'成本2.033，收盘1.929。连跌两天。仓位4800太重。',stop:'不补',target:'1.95-1.98减1600→3200股',note:'减仓不是清仓。拿回现金等周一长鑫上市后捡漏。'},
-    {c:'601991',sg:'四连阳·持有',cl:'#2ed573',act:'持有不加仓',entry:'成本8.83，今天+0.6%到6.99。四连阳。电力独立于长鑫不受影响。',stop:'不追',target:'7.50-8.00',note:'电力唯一跨周主线。安心持有。'},
-    {c:'600760',sg:'四连阳·底仓',cl:'#f0c060',act:'100股不动',entry:'成本71.92，今天+1.4%到43.34。军工四连阳温和上涨。',stop:'不加',note:'底仓观望。'}
+    {c:'000066',sg:'-42%深套',cl:'#ff4757',act:'400股不动',entry:'成本24.81现14.49。周五-3.8%跌破15。14元整数关下周面临考验。',stop:'不加不补',target:'17-18减仓100股',note:'长鑫抽血可能被误伤。不恐慌不割肉。'},
+    {c:'159819',sg:'-6.9%连跌',cl:'#f0c060',act:'反弹减仓',entry:'成本2.033现1.894。连跌三天。仓位4800太重。',stop:'不补',target:'1.95+减1600股→3200',note:'周一若低开不补。等长鑫后反弹再减。'},
+    {c:'601991',sg:'跌停！',cl:'#ff4757',act:'持有等反弹',entry:'成本8.83现6.29。四连阳后-10%跌停。电力行情没死，但高潮后暴力回调。',stop:'不补',target:'7.00-7.50',note:'等6.00附近企稳可加100股。不在恐慌中割肉。'},
+    {c:'600760',sg:'五连阳+3%',cl:'#2ed573',act:'100股底仓',entry:'成本71.92现43.30。本周唯一五连阳标的。不受任何板块轮动影响。',stop:'不加',target:'45-48',note:'最稳的底仓。军工独立行情。'}
   ],
   new:[
-    {c:'600900',sg:'周五可建仓',cl:'#2ed573',act:'28.5-29买100股',entry:'长江电力水电龙头。现价28.94在区间内。慢牛属性不受长鑫影响。',stop:'27',target:'32-34',note:'跟大唐互补。周五唯一适合建仓的标的。'},
-    {c:'510300',sg:'宽基底仓',cl:'#2ed573',act:'4.65-4.75买2000份',entry:'沪深300ETF。最稳宽基。长鑫抽血对沪深300影响小。',note:'底仓配置，不用盯盘。'}
+    {c:'600900',sg:'可建仓',cl:'#2ed573',act:'28.5-29买100股',entry:'长江电力。不受长鑫影响。慢牛+分红4%。',stop:'27',target:'32-34',note:'与大唐互补。最稳的标的。'},
+    {c:'510300',sg:'宽基底仓',cl:'#2ed573',act:'4.65-4.75买2000份',entry:'沪深300ETF。长鑫抽血影响最小。',stop:'-',target:'-',note:'底仓压舱石。'}
   ],
   watch:[
-    {c:'600988',sg:'三天+20%已飞',cl:'#2ed573',act:'别追了',entry:'32→38.83，三天+20%+主力-6511万流出。飞了就飞了。',stop:'-',target:'-',note:'黄金逻辑还在但赤峰已高。没仓位就不要追了。'},
-    {c:'600900',sg:'周五可建仓',cl:'#2ed573',act:'28.5-29买100股',entry:'长江电力水电龙头。不受长鑫抽血影响。慢牛+分红4%。',stop:'27',target:'32-34',note:'周五唯一适合新建仓的标的。与大唐互补。'},
-    {c:'000767',sg:'冲高回落·等',cl:'#f0c060',act:'等3.80-3.90',note:'四连阳后自然回调再考虑。长鑫不影响电力。'},
-    {c:'000063',sg:'等企稳',cl:'#f0c060',act:'不买',note:'长鑫上市对通信也有抽血效应。等下周再看。'},
-    {c:'600096',sg:'磷矿龙头',cl:'#2ed573',act:'PE仅10可轻仓',entry:'云天化磷矿资源龙头。PE极低安全垫厚。',note:'化工方向逻辑好。等长鑫后布局。'},
-    {c:'600160',sg:'氟化工龙头',cl:'#2ed573',act:'等下周回调',entry:'巨化股份制冷剂+氟聚合物双线受益。等MA10附近。',note:'AI液冷+半导体材料国产替代逻辑。'},
-    {c:'600141',sg:'磷+硅双线',cl:'#2ed573',act:'等下周',entry:'兴发集团磷化工+有机硅。PE 15合理。',note:'等长鑫上市后。'}
+    {c:'600988',sg:'等回调',cl:'#f0c060',act:'不追',entry:'32→36.5，周五-6%。等35附近。',stop:'-',target:'38-40',note:'黄金逻辑还在。'},
+    {c:'600900',sg:'可建仓',cl:'#2ed573',act:'28.5-29买100股',entry:'长江电力。不受长鑫抽血。慢牛+分红4%。',stop:'27',target:'32-34',note:''},
+    {c:'600118',sg:'深跌观望',cl:'#f0c060',act:'等企稳',entry:'现57.78，年内-39%。军工航天。',stop:'-',target:'-',note:'等军工轮动。暂不建仓。'},
+    {c:'600141',sg:'磷化工',cl:'#2ed573',act:'等长鑫后',entry:'兴发集团。磷化工+有机硅。PE15。',stop:'-',target:'-',note:'化工方向。'},
+    {c:'600096',sg:'磷矿龙头',cl:'#2ed573',act:'PE10可轻仓',entry:'云天化。磷矿资源龙头。PE极低。',stop:'-',target:'-',note:'化工方向安全垫厚。'},
+    {c:'600160',sg:'氟化工',cl:'#2ed573',act:'等回调',entry:'巨化股份。制冷剂+氟聚合物。',stop:'-',target:'-',note:'AI液冷+半导体材料。'},
+    {c:'002150',sg:'中金+73%',cl:'#2ed573',act:'等长鑫后',entry:'正泰电源。目标38。电网设备主线。',stop:'19',target:'38',note:'小盘弹性大，轻仓试探。'},
+    {c:'002458',sg:'中金+44%',cl:'#2ed573',act:'暴跌后可低吸',entry:'益生股份。周五-9.8%到8.34。目标12。',stop:'7.5',target:'12',note:'养殖防御。不受长鑫影响。'},
+    {c:'600030',sg:'中金+43%',cl:'#2ed573',act:'等长鑫后',entry:'中信证券。现27.95目标40。券商龙头。',stop:'-',target:'40',note:'长鑫IPO承销利好券商。'},
+    {c:'000776',sg:'中金+29%',cl:'#2ed573',act:'PE最低最安全',entry:'广发证券。现21.70 PE仅9.5。目标28。',stop:'-',target:'28',note:'券商里估值最低。'},
+    {c:'601225',sg:'中金+17%',cl:'#f0c060',act:'空间小',entry:'陕西煤业。现24.70目标29。高股息。',stop:'-',target:'29',note:'不如长江电力。'}
   ],
   etf:[
-    {c:'510300',sg:'周五可建仓',cl:'#2ed573',act:'4.65-4.75买2000份',entry:'沪深300ETF。长鑫抽血影响最小。最稳宽基底仓。',note:'不盯盘。中长线压舱石。'},
-    {c:'560080',sg:'防御之王',cl:'#2ed573',act:'持有',note:'穿越牛熊。不受任何个股IPO影响。'},
-    {c:'588000',sg:'等长鑫后',cl:'#f0c060',act:'下周一再看',note:'长鑫上市对科创50抽血最直接。等下周。'},
-    {c:'159915',sg:'创业板ETF',cl:'#f0c060',act:'等长鑫后',note:'同科创50。等周一过去。'},
-    {c:'516020',sg:'化工ETF',cl:'#2ed573',act:'关注',note:'覆盖氟化工+磷化工+炼化。周期复苏+估值低位。等下周。'}
+    {c:'510300',sg:'可建仓',cl:'#2ed573',act:'4.65-4.75买2000份',entry:'沪深300ETF。长鑫抽血影响最小。',note:'最稳宽基底仓。'},
+    {c:'560080',sg:'防御之王',cl:'#2ed573',act:'持有',entry:'穿越牛熊。不受任何IPO影响。',note:''},
+    {c:'588000',sg:'等长鑫后',cl:'#f0c060',act:'下周一再看',entry:'长鑫对科创50抽血最直接。',note:''},
+    {c:'159915',sg:'等长鑫后',cl:'#f0c060',act:'下周再说',entry:'创业板ETF。同科创50。',note:''},
+    {c:'516020',sg:'关注',cl:'#2ed573',act:'等下周',entry:'化工ETF。覆盖氟化工+磷化工+炼化。',note:''}
   ]
 };
+
+// ═══════ 引擎 ═══════
 var M={0:'0',1:'1'};
 function sid(s){return M[s.m]+'.'+s.c}
 var UQ=(function(){var s=IDX.concat(POS).concat(WATCH).concat(ETF);var m={};return s.filter(function(x){if(m[x.c])return false;m[x.c]=true;return true})})();
 
 function f(n,d){d=d||2;if(n==null||isNaN(n))return'--';return Number(n).toFixed(d)}
 function lookupName(c){var all=POS.concat(WATCH).concat(ETF).concat(IDX);var s=all.find(function(x){return x.c===c});return s?s.n:c}
-function lookupSig(c){var all=(STRAT.pos||[]).concat(STRAT.watch||[]).concat(STRAT.etf||[]);return all.find(function(s){return s.c===c})||null}
+function lookupSig(c){var all=(STRAT.pos||[]).concat(STRAT.watch||[]).concat(STRAT.etf||[]).concat(STRAT.new||[]);return all.find(function(s){return s.c===c})||null}
 
 // ── 关注标的排序+高亮 ──
 function loadWL(){try{return JSON.parse(localStorage.getItem('wlOrder')||'[]')}catch(e){return[]}}
@@ -174,13 +181,16 @@ function toggleHL(idx){
   if(i>=0)hl.splice(i,1);else hl.push(c);
   saveHL(hl);render();
 }
+
 var tabMode='all',fail=0,tmr=null;
 
 function render(){
+  // 指数条
   var ih='';
   IDX.forEach(function(i){var d=i._d;if(!d)return;var cl=d.changePct>=0?'#ff4757':'#2ed573';ih+='<div class="idx-item"><div class="l">'+i.n+'</div><div class="p" style="color:'+cl+'">'+f(d.price)+'</div><div class="c" style="color:'+cl+'">'+(d.changePct>=0?'+':'')+f(d.changePct,2)+'%</div></div>'});
   document.getElementById('idxBar').innerHTML=ih||'<div style="padding:12px;color:var(--sub);text-align:center">加载中...</div>';
 
+  // 行情卡片
   function card(s,held){
     var d=s._d;if(!d)return'<div class="qc'+(s._hcls||'')+'"><div class="qc-main"><div class="L"><div class="N">'+s.n+'</div><div class="sub">'+s.c+' · 等待数据</div></div></div></div>';
     var sg=lookupSig(s.c),cl=d.changePct>=0?'#ff4757':'#2ed573',tags='';
@@ -190,10 +200,13 @@ function render(){
     return'<div class="qc'+(s._hcls||'')+'"><div class="qc-main"><div class="L"><div class="N">'+s.n+' '+tags+'</div><div class="sub">'+s.c+'</div></div><div class="pr" style="color:'+cl+'">'+f(d.price)+'</div></div>'+pnl+'<div class="qc-meta"><span>今开<b>'+f(d.open)+'</b></span><span>最高<b>'+f(d.high)+'</b></span><span>最低<b>'+f(d.low)+'</b></span><span>昨收<b>'+f(d.close)+'</b></span></div></div>';
   }
 
+  // 持仓
   var ph='',tv=0,tp=0;
   POS.forEach(function(s){var d=s._d;if(d&&d.price&&s.cost&&s.sh){tv+=d.price*s.sh;tp+=(d.price-s.cost)*s.sh}ph+=card(s,true)});
   ph='<div class="section-label">持仓 · 市值'+f(tv,0)+'元 <span style="color:'+(tp>=0?'#ff4757':'#2ed573')+'">浮'+(tp>=0?'盈':'亏')+' '+f(tp,0)+'元</span></div>'+ph;
-  var hl=loadHL(),wh='<div class="section-label">关注标的 · 点★突出 · 箭头排序</div>';
+
+  // 关注
+  var hl=loadHL(),wh='<div class="section-label">关注标的 · ★突出 · ▲▼排序</div>';
   WATCH.forEach(function(s,i){
     var hcls=hl.indexOf(s.c)>=0?' highlighted':'';
     if(tabMode==='watch')s._hcls=hcls;
@@ -202,23 +215,32 @@ function render(){
   function actionBtns(i,hl){
     var isHL=hl.indexOf(WATCH[i].c)>=0;
     return'<div style="display:flex;justify-content:flex-end;padding:0 14px 6px;gap:2px">'+
-    '<button class="wl-btn" onclick="moveWL('+i+',-1)" title="上移">▲</button>'+
-    '<button class="wl-btn" onclick="moveWL('+i+',1)" title="下移">▼</button>'+
-    '<button class="wl-btn'+(isHL?' hl-on':'')+'" onclick="toggleHL('+i+')" title="突出">★</button>'+
-    '</div>';
+    '<button class="wl-btn" onclick="moveWL('+i+',-1)">▲</button>'+
+    '<button class="wl-btn" onclick="moveWL('+i+',1)">▼</button>'+
+    '<button class="wl-btn'+(isHL?' hl-on':'')+'" onclick="toggleHL('+i+')">★</button></div>';
   }
+
+  // ETF
   var eh='<div class="section-label">ETF</div>';ETF.forEach(function(s){eh+=card(s,false)});
 
+  // 策略
   var sh='';
   if(STRAT.bias)sh+='<div class="bias"><b>市场判断</b><br>'+STRAT.bias+'</div>';
-  if(STRAT.pos){sh+='<div class="section-label">持仓操作建议</div>';STRAT.pos.forEach(function(p){sh+='<div class="sc"><div class="sc-head"><span class="sc-name">'+lookupName(p.c)+' ('+p.c+')</span><span class="sc-badge" style="background:'+(p.cl||'#f0c060')+'15;color:'+(p.cl||'#f0c060')+'">'+p.sg+'</span></div><div class="sc-note"><b>'+p.act+'</b> · '+p.note+'</div><div class="sc-grid"><div class="sc-gi"><div class="lbl">买入/加仓</div><div class="val">'+p.entry+'</div></div><div class="sc-gi"><div class="lbl">止损</div><div class="val" style="color:#ff4757">'+p.stop+'</div></div><div class="sc-gi full"><div class="lbl">目标</div><div class="val">'+p.target+'</div></div></div></div>'})}
-  if(STRAT.watch){sh+='<div class="section-label">关注个股</div>';STRAT.watch.forEach(function(w){sh+='<div class="sc"><div class="sc-head"><span class="sc-name">'+lookupName(w.c)+' ('+w.c+')</span><span class="sc-badge" style="background:'+(w.cl||'#f0c060')+'15;color:'+(w.cl||'#f0c060')+'">'+w.act+'</span></div><div class="sc-note">'+w.note+'</div><div class="sc-grid"><div class="sc-gi"><div class="lbl">入场区间</div><div class="val">'+w.entry+'</div></div><div class="sc-gi"><div class="lbl">止损</div><div class="val" style="color:#ff4757">'+w.stop+'</div></div><div class="sc-gi full"><div class="lbl">目标</div><div class="val">'+w.target+'</div></div></div></div>'})}
-  if(STRAT.etf){sh+='<div class="section-label">ETF建议</div>';STRAT.etf.forEach(function(e){sh+='<div class="sc"><div class="sc-head"><span class="sc-name">'+lookupName(e.c)+' ('+e.c+')</span><span class="sc-badge" style="background:'+(e.cl||'#f0c060')+'15;color:'+(e.cl||'#f0c060')+'">'+e.act+'</span></div><div class="sc-note">'+(e.note||'')+'</div><div class="sc-grid"><div class="sc-gi"><div class="lbl">入场</div><div class="val">'+e.entry+'</div></div><div class="sc-gi"><div class="lbl">目标</div><div class="val">'+e.target+'</div></div></div></div>'})}
+  if(STRAT.pos){sh+='<div class="section-label">持仓操作建议</div>';STRAT.pos.forEach(function(p){sh+=stratCard(p,'pos')})}
+  if(STRAT.new){sh+='<div class="section-label">新建仓建议</div>';STRAT.new.forEach(function(n){sh+=stratCard(n,'new')})}
+  if(STRAT.watch){sh+='<div class="section-label">关注标的策略</div>';STRAT.watch.forEach(function(w){sh+=stratCard(w,'watch')})}
+  if(STRAT.etf){sh+='<div class="section-label">ETF建议</div>';STRAT.etf.forEach(function(e){sh+=stratCard(e,'etf')})}
   sh+='<div class="ft">策略更新于 '+STRAT.updated+'</div>';
+
+  function stratCard(p,type){
+    var nm=lookupName(p.c);
+    return'<div class="sc"><div class="sc-head"><span class="sc-name">'+nm+' ('+p.c+')</span><span class="sc-badge" style="background:'+(p.cl||'#f0c060')+'15;color:'+(p.cl||'#f0c060')+'">'+(p.sg||p.act)+'</span></div><div class="sc-note"><b>'+(p.act||'')+'</b> · '+(p.note||'')+'</div><div class="sc-grid"><div class="sc-gi"><div class="lbl">入场</div><div class="val">'+(p.entry||'-')+'</div></div><div class="sc-gi"><div class="lbl">止损</div><div class="val" style="color:#ff4757">'+(p.stop||'-')+'</div></div><div class="sc-gi full"><div class="lbl">目标</div><div class="val">'+(p.target||'-')+'</div></div></div></div>';
+  }
 
   document.getElementById('main').innerHTML=tabMode==='strat'?sh:tabMode==='pos'?ph:tabMode==='watch'?wh:ph+wh+eh;
 }
 
+// ═══════ 数据获取 ═══════
 async function fetchQuotes(){
   try{
     var url='https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f2,f3,f4,f12,f14,f15,f16,f17,f18&secids='+UQ.map(function(s){return sid(s)}).join(',');
