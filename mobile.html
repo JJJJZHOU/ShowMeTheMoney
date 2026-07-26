@@ -63,6 +63,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:10px 24px;border-radius:24px;font-size:13px;font-weight:700;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 8px 30px rgba(240,192,96,0.3)}
 .toast.show{opacity:1}
 .ft{text-align:center;font-size:10px;color:var(--sub);padding:12px;opacity:0.5}
+.wl-actions{display:flex;gap:2px;margin-left:8px}
+.wl-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text-muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:0;line-height:1}
+.wl-btn:active{background:rgba(240,192,96,0.2);color:var(--gold)}
+.wl-btn.hl-on{background:rgba(240,192,96,0.2);color:var(--gold);border-color:var(--gold)}
+.qc.highlighted{border-color:var(--gold);box-shadow:0 0 12px rgba(240,192,96,0.15)}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .qc,.sc{animation:slideUp 0.3s ease-out}
 </style>
@@ -146,6 +151,29 @@ function f(n,d){d=d||2;if(n==null||isNaN(n))return'--';return Number(n).toFixed(
 function lookupName(c){var all=POS.concat(WATCH).concat(ETF).concat(IDX);var s=all.find(function(x){return x.c===c});return s?s.n:c}
 function lookupSig(c){var all=(STRAT.pos||[]).concat(STRAT.watch||[]).concat(STRAT.etf||[]);return all.find(function(s){return s.c===c})||null}
 
+// ── 关注标的排序+高亮 ──
+function loadWL(){try{return JSON.parse(localStorage.getItem('wlOrder')||'[]')}catch(e){return[]}}
+function saveWL(arr){localStorage.setItem('wlOrder',JSON.stringify(arr))}
+function loadHL(){try{return JSON.parse(localStorage.getItem('wlHL')||'[]')}catch(e){return[]}}
+function saveHL(arr){localStorage.setItem('wlHL',JSON.stringify(arr))}
+(function(){
+  var order=loadWL(),hl=loadHL(),m={};
+  WATCH.forEach(function(s,i){m[s.c]=i});
+  if(order.length===WATCH.length&&order.every(function(c){return m[c]!=null})){
+    WATCH.sort(function(a,b){return order.indexOf(a.c)-order.indexOf(b.c)});
+  }else{saveWL(WATCH.map(function(s){return s.c}))}
+  if(!hl.length)saveHL([]);
+})();
+function moveWL(idx,dir){
+  var n=idx+dir;if(n<0||n>=WATCH.length)return;
+  var t=WATCH[idx];WATCH[idx]=WATCH[n];WATCH[n]=t;
+  saveWL(WATCH.map(function(s){return s.c}));render();
+}
+function toggleHL(idx){
+  var c=WATCH[idx].c,hl=loadHL(),i=hl.indexOf(c);
+  if(i>=0)hl.splice(i,1);else hl.push(c);
+  saveHL(hl);render();
+}
 var tabMode='all',fail=0,tmr=null;
 
 function render(){
@@ -154,18 +182,31 @@ function render(){
   document.getElementById('idxBar').innerHTML=ih||'<div style="padding:12px;color:var(--sub);text-align:center">加载中...</div>';
 
   function card(s,held){
-    var d=s._d;if(!d)return'<div class="qc"><div class="qc-main"><div class="L"><div class="N">'+s.n+'</div><div class="sub">'+s.c+' · 等待数据</div></div></div></div>';
+    var d=s._d;if(!d)return'<div class="qc'+(s._hcls||'')+'"><div class="qc-main"><div class="L"><div class="N">'+s.n+'</div><div class="sub">'+s.c+' · 等待数据</div></div></div></div>';
     var sg=lookupSig(s.c),cl=d.changePct>=0?'#ff4757':'#2ed573',tags='';
     if(held&&s.cost){tags='<span class="tag cost">成本'+s.cost+'</span><span class="tag hold">'+s.sh+'股</span>'}
     if(sg)tags+='<span class="tag sig" style="background:'+(sg.cl||'#f0c060')+'15;color:'+(sg.cl||'#f0c060')+'">'+sg.sg+'</span>';
     var pnl='';if(held&&s.cost&&s.sh&&d.price){var pct=(d.price-s.cost)/s.cost*100,amt=(d.price-s.cost)*s.sh;pnl='<div class="qc-pnl" style="color:'+(pct>=0?'#ff4757':'#2ed573')+'">浮'+(pct>=0?'盈':'亏')+' '+f(pct,1)+'% | '+f(amt,0)+'元</div>'}
-    return'<div class="qc"><div class="qc-main"><div class="L"><div class="N">'+s.n+' '+tags+'</div><div class="sub">'+s.c+'</div></div><div class="pr" style="color:'+cl+'">'+f(d.price)+'</div></div>'+pnl+'<div class="qc-meta"><span>今开<b>'+f(d.open)+'</b></span><span>最高<b>'+f(d.high)+'</b></span><span>最低<b>'+f(d.low)+'</b></span><span>昨收<b>'+f(d.close)+'</b></span></div></div>';
+    return'<div class="qc'+(s._hcls||'')+'"><div class="qc-main"><div class="L"><div class="N">'+s.n+' '+tags+'</div><div class="sub">'+s.c+'</div></div><div class="pr" style="color:'+cl+'">'+f(d.price)+'</div></div>'+pnl+'<div class="qc-meta"><span>今开<b>'+f(d.open)+'</b></span><span>最高<b>'+f(d.high)+'</b></span><span>最低<b>'+f(d.low)+'</b></span><span>昨收<b>'+f(d.close)+'</b></span></div></div>';
   }
 
   var ph='',tv=0,tp=0;
   POS.forEach(function(s){var d=s._d;if(d&&d.price&&s.cost&&s.sh){tv+=d.price*s.sh;tp+=(d.price-s.cost)*s.sh}ph+=card(s,true)});
   ph='<div class="section-label">持仓 · 市值'+f(tv,0)+'元 <span style="color:'+(tp>=0?'#ff4757':'#2ed573')+'">浮'+(tp>=0?'盈':'亏')+' '+f(tp,0)+'元</span></div>'+ph;
-  var wh='<div class="section-label">关注标的</div>';WATCH.forEach(function(s){wh+=card(s,false)});
+  var hl=loadHL(),wh='<div class="section-label">关注标的 · 点★突出 · 箭头排序</div>';
+  WATCH.forEach(function(s,i){
+    var hcls=hl.indexOf(s.c)>=0?' highlighted':'';
+    if(tabMode==='watch')s._hcls=hcls;
+    wh+=card(s,false)+(tabMode==='watch'?actionBtns(i,hl):'');
+  });
+  function actionBtns(i,hl){
+    var isHL=hl.indexOf(WATCH[i].c)>=0;
+    return'<div style="display:flex;justify-content:flex-end;padding:0 14px 6px;gap:2px">'+
+    '<button class="wl-btn" onclick="moveWL('+i+',-1)" title="上移">▲</button>'+
+    '<button class="wl-btn" onclick="moveWL('+i+',1)" title="下移">▼</button>'+
+    '<button class="wl-btn'+(isHL?' hl-on':'')+'" onclick="toggleHL('+i+')" title="突出">★</button>'+
+    '</div>';
+  }
   var eh='<div class="section-label">ETF</div>';ETF.forEach(function(s){eh+=card(s,false)});
 
   var sh='';
