@@ -54,9 +54,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .bias{margin:10px 12px;padding:14px 16px;background:linear-gradient(135deg,rgba(240,192,96,0.06),rgba(212,168,83,0.02));border:1px solid rgba(240,192,96,0.15);border-radius:12px;font-size:12px;line-height:1.7}
 .bias b{color:var(--gold)}
 .section-label{font-size:11px;color:var(--sub);padding:16px 16px 4px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
-.pos-card{border-left:2px solid var(--gold)}
-.watch-card{border-left:2px solid transparent}
-.divider{margin:8px 12px;height:1px;background:linear-gradient(90deg,transparent,rgba(240,192,96,0.3),transparent)}
 .btm{position:sticky;bottom:0;z-index:99;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--sub)}
 .btm .chip{padding:4px 12px;border-radius:12px;font-size:10px;font-weight:700}
 .btm .chip.live{background:rgba(46,213,115,0.12);color:#2ed573}
@@ -76,6 +73,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 <div class="tab-wrap">
 <button class="tab-btn on" data-t="all" onclick="switchTab('all')">全部</button>
 <button class="tab-btn" data-t="pos" onclick="switchTab('pos')">持仓</button>
+<button class="tab-btn" data-t="watch" onclick="switchTab('watch')">关注</button>
 <button class="tab-btn" data-t="strat" onclick="switchTab('strat')">策略</button>
 </div>
 <div id="main"></div>
@@ -161,13 +159,13 @@ function render(){
     if(held&&s.cost){tags='<span class="tag cost">成本'+s.cost+'</span><span class="tag hold">'+s.sh+'股</span>'}
     if(sg)tags+='<span class="tag sig" style="background:'+(sg.cl||'#f0c060')+'15;color:'+(sg.cl||'#f0c060')+'">'+sg.sg+'</span>';
     var pnl='';if(held&&s.cost&&s.sh&&d.price){var pct=(d.price-s.cost)/s.cost*100,amt=(d.price-s.cost)*s.sh;pnl='<div class="qc-pnl" style="color:'+(pct>=0?'#ff4757':'#2ed573')+'">浮'+(pct>=0?'盈':'亏')+' '+f(pct,1)+'% | '+f(amt,0)+'元</div>'}
-    var cardCls=held?'qc pos-card':'qc watch-card';return'<div class="'+cardCls+'"><div class="qc-main"><div class="L"><div class="N">'+s.n+' '+tags+'</div><div class="sub">'+s.c+'</div></div><div class="pr" style="color:'+cl+'">'+f(d.price)+'</div></div>'+pnl+'<div class="qc-meta"><span>今开<b>'+f(d.open)+'</b></span><span>最高<b>'+f(d.high)+'</b></span><span>最低<b>'+f(d.low)+'</b></span><span>昨收<b>'+f(d.close)+'</b></span></div></div>';
+    return'<div class="qc"><div class="qc-main"><div class="L"><div class="N">'+s.n+' '+tags+'</div><div class="sub">'+s.c+'</div></div><div class="pr" style="color:'+cl+'">'+f(d.price)+'</div></div>'+pnl+'<div class="qc-meta"><span>今开<b>'+f(d.open)+'</b></span><span>最高<b>'+f(d.high)+'</b></span><span>最低<b>'+f(d.low)+'</b></span><span>昨收<b>'+f(d.close)+'</b></span></div></div>';
   }
 
   var ph='',tv=0,tp=0;
   POS.forEach(function(s){var d=s._d;if(d&&d.price&&s.cost&&s.sh){tv+=d.price*s.sh;tp+=(d.price-s.cost)*s.sh}ph+=card(s,true)});
-  ph='<div class="section-label">💰 持仓 · 市值'+f(tv,0)+'元 <span style="color:'+(tp>=0?'#ff4757':'#2ed573')+'">浮'+(tp>=0?'盈':'亏')+' '+f(tp,0)+'元</span></div>'+ph;
-  var wh='<div class="divider"></div><div class="section-label">👀 关注标的</div>';WATCH.forEach(function(s){wh+=card(s,false)});
+  ph='<div class="section-label">持仓 · 市值'+f(tv,0)+'元 <span style="color:'+(tp>=0?'#ff4757':'#2ed573')+'">浮'+(tp>=0?'盈':'亏')+' '+f(tp,0)+'元</span></div>'+ph;
+  var wh='<div class="section-label">关注标的</div>';WATCH.forEach(function(s){wh+=card(s,false)});
   var eh='<div class="section-label">ETF</div>';ETF.forEach(function(s){eh+=card(s,false)});
 
   var sh='';
@@ -177,7 +175,7 @@ function render(){
   if(STRAT.etf){sh+='<div class="section-label">ETF建议</div>';STRAT.etf.forEach(function(e){sh+='<div class="sc"><div class="sc-head"><span class="sc-name">'+lookupName(e.c)+' ('+e.c+')</span><span class="sc-badge" style="background:'+(e.cl||'#f0c060')+'15;color:'+(e.cl||'#f0c060')+'">'+e.act+'</span></div><div class="sc-note">'+(e.note||'')+'</div><div class="sc-grid"><div class="sc-gi"><div class="lbl">入场</div><div class="val">'+e.entry+'</div></div><div class="sc-gi"><div class="lbl">目标</div><div class="val">'+e.target+'</div></div></div></div>'})}
   sh+='<div class="ft">策略更新于 '+STRAT.updated+'</div>';
 
-  document.getElementById('main').innerHTML=tabMode==='strat'?sh:tabMode==='pos'?ph:ph+wh+eh;
+  document.getElementById('main').innerHTML=tabMode==='strat'?sh:tabMode==='pos'?ph:tabMode==='watch'?wh:ph+wh+eh;
 }
 
 async function fetchQuotes(){
