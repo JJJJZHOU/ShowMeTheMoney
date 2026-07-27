@@ -79,6 +79,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 <button class="tab-btn on" data-t="all" onclick="switchTab('all')">全部</button>
 <button class="tab-btn" data-t="pos" onclick="switchTab('pos')">持仓</button>
 <button class="tab-btn" data-t="watch" onclick="switchTab('watch')">关注</button>
+<button class="tab-btn" data-t="cicc" onclick="switchTab('cicc')">中金</button>
 <button class="tab-btn" data-t="strat" onclick="switchTab('strat')">策略</button>
 </div>
 <div id="main"></div>
@@ -98,12 +99,28 @@ var POS=[
   {c:'600760',m:1,n:'中航沈飞',cost:71.9201,sh:100}
 ];
 var WATCH=[
-  {c:'600988',m:1,n:'赤峰黄金'},{c:'600900',m:1,n:'长江电力'},
-  {c:'002756',m:0,n:'永杉锂业'},{c:'600118',m:1,n:'中国卫星'},
-  {c:'600141',m:1,n:'兴发集团'},{c:'600096',m:1,n:'云天化'},
-  {c:'600160',m:1,n:'巨化股份'},{c:'002150',m:0,n:'正泰电源'},
+  {c:'600988',m:1,n:'赤峰黄金'},{c:'600118',m:1,n:'中国卫星'},
+  {c:'600141',m:1,n:'兴发集团'},{c:'002150',m:0,n:'正泰电源'},
   {c:'002458',m:0,n:'益生股份'},{c:'600030',m:1,n:'中信证券'},
   {c:'000776',m:0,n:'广发证券'},{c:'601225',m:1,n:'陕西煤业'}
+];
+var CICC=[
+  {c:'601899',m:1,n:'紫金矿业'},{c:'603993',m:1,n:'洛阳钼业'},
+  {c:'601168',m:1,n:'西部矿业'},{c:'002532',m:0,n:'天山铝业'},
+  {c:'000060',m:0,n:'锡业股份'},{c:'600549',m:1,n:'厦门钨业'},
+  {c:'000657',m:0,n:'中钨高新'},{c:'600732',m:1,n:'爱旭股份'},
+  {c:'600438',m:1,n:'福能股份'},{c:'600011',m:1,n:'华能国际'},
+  {c:'002028',m:0,n:'思源电气'},{c:'600312',m:1,n:'平高电气'},
+  {c:'601872',m:1,n:'招商轮船'},{c:'600026',m:1,n:'中远海能'},
+  {c:'002120',m:0,n:'韵达股份'},{c:'002179',m:0,n:'中航光电'},
+  {c:'600031',m:1,n:'三一重工'},{c:'002142',m:0,n:'宁波银行'},
+  {c:'600919',m:1,n:'江苏银行'},{c:'601318',m:1,n:'中国平安'},
+  {c:'601601',m:1,n:'中国太保'},{c:'002244',m:0,n:'滨江集团'},
+  {c:'002938',m:0,n:'鹏鼎控股'},{c:'002916',m:0,n:'深南电路'},
+  {c:'002371',m:0,n:'北方华创'},{c:'600066',m:1,n:'宇通客车'},
+  {c:'600519',m:1,n:'贵州茅台'},{c:'603345',m:1,n:'安井食品'},
+  {c:'002714',m:0,n:'牧原股份'},{c:'603259',m:1,n:'药明康德'},
+  {c:'002555',m:0,n:'三七互娱'},{c:'002517',m:0,n:'恺英网络'}
 ];
 var ETF=[
   {c:'588000',m:1,n:'科创50'},{c:'510300',m:1,n:'沪深300'},
@@ -130,11 +147,8 @@ var STRAT={
   watch:[
     {c:'600988',sg:'等回调',cl:'#f0c060',act:'不追',entry:'32→36.5，周五-6%。等35附近。',stop:'-',target:'38-40',note:'黄金逻辑还在。'},
     {c:'600900',sg:'可建仓',cl:'#2ed573',act:'28.5-29买100股',entry:'长江电力。不受长鑫抽血。慢牛+分红4%。',stop:'27',target:'32-34',note:''},
-    {c:'002756',sg:'锂电反弹先锋',cl:'#2ed573',act:'等44-45建仓',entry:'从39.5底部反弹+16%到45.9。锂电双主线之一。回踩MA10(44)建仓。',stop:'跌破39',target:'50-55',note:'弹性最大。宁德回购+碳酸锂涨价催化。已涨不追，等回调。'},
     {c:'600118',sg:'跌37%·等55-57',cl:'#f0c060',act:'等回踩前低',entry:'从87.6跌到54.7(-37.6%)。反弹到59但MA10在64压制。回踩55-57建仓。',stop:'跌破54',target:'65-70',note:'深跌军工。不追反弹，等二次探底。'},
     {c:'600141',sg:'底部横盘·最稳',cl:'#2ed573',act:'28.5-29建仓',entry:'从27.3反弹后四连横盘29-30。MA5/10粘合。PE15安全。',stop:'跌破27',target:'32-34',note:'三只里最稳。底部确认。建仓后不用频繁操作。'},
-    {c:'600096',sg:'磷矿龙头',cl:'#2ed573',act:'PE10可轻仓',entry:'云天化。磷矿资源龙头。PE极低。',stop:'-',target:'-',note:'化工方向安全垫厚。'},
-    {c:'600160',sg:'氟化工',cl:'#2ed573',act:'等回调',entry:'巨化股份。制冷剂+氟聚合物。',stop:'-',target:'-',note:'AI液冷+半导体材料。'},
     {c:'002150',sg:'中金+73%',cl:'#2ed573',act:'等长鑫后',entry:'正泰电源。目标38。电网设备主线。',stop:'19',target:'38',note:'小盘弹性大，轻仓试探。'},
     {c:'002458',sg:'中金+44%',cl:'#2ed573',act:'暴跌后可低吸',entry:'益生股份。周五-9.8%到8.34。目标12。',stop:'7.5',target:'12',note:'养殖防御。不受长鑫影响。'},
     {c:'600030',sg:'中金+43%',cl:'#2ed573',act:'等长鑫后',entry:'中信证券。现27.95目标40。券商龙头。',stop:'-',target:'40',note:'长鑫IPO承销利好券商。'},
@@ -153,10 +167,10 @@ var STRAT={
 // ═══════ 引擎 ═══════
 var M={0:'0',1:'1'};
 function sid(s){return M[s.m]+'.'+s.c}
-var UQ=(function(){var s=IDX.concat(POS).concat(WATCH).concat(ETF);var m={};return s.filter(function(x){if(m[x.c])return false;m[x.c]=true;return true})})();
+var UQ=(function(){var s=IDX.concat(POS).concat(WATCH).concat(CICC).concat(ETF);var m={};return s.filter(function(x){if(m[x.c])return false;m[x.c]=true;return true})})();
 
 function f(n,d){d=d||2;if(n==null||isNaN(n))return'--';return Number(n).toFixed(d)}
-function lookupName(c){var all=POS.concat(WATCH).concat(ETF).concat(IDX);var s=all.find(function(x){return x.c===c});return s?s.n:c}
+function lookupName(c){var all=POS.concat(WATCH).concat(CICC).concat(ETF).concat(IDX);var s=all.find(function(x){return x.c===c});return s?s.n:c}
 function lookupSig(c){var all=(STRAT.pos||[]).concat(STRAT.watch||[]).concat(STRAT.etf||[]).concat(STRAT.new||[]);return all.find(function(s){return s.c===c})||null}
 
 // ── 关注标的排序+高亮 ──
@@ -223,6 +237,7 @@ function render(){
 
   // ETF
   var eh='<div class="section-label">ETF</div>';ETF.forEach(function(s){eh+=card(s,false)});
+  var ch='<div class="section-label">中金关注</div>';CICC.forEach(function(s){ch+=card(s,false)});
 
   // 策略
   var sh='';
@@ -238,7 +253,7 @@ function render(){
     return'<div class="sc"><div class="sc-head"><span class="sc-name">'+nm+' ('+p.c+')</span><span class="sc-badge" style="background:'+(p.cl||'#f0c060')+'15;color:'+(p.cl||'#f0c060')+'">'+(p.sg||p.act)+'</span></div><div class="sc-note"><b>'+(p.act||'')+'</b> · '+(p.note||'')+'</div><div class="sc-grid"><div class="sc-gi"><div class="lbl">入场</div><div class="val">'+(p.entry||'-')+'</div></div><div class="sc-gi"><div class="lbl">止损</div><div class="val" style="color:#ff4757">'+(p.stop||'-')+'</div></div><div class="sc-gi full"><div class="lbl">目标</div><div class="val">'+(p.target||'-')+'</div></div></div></div>';
   }
 
-  document.getElementById('main').innerHTML=tabMode==='strat'?sh:tabMode==='pos'?ph:tabMode==='watch'?wh:ph+wh+eh;
+  document.getElementById('main').innerHTML=tabMode==='strat'?sh:tabMode==='pos'?ph:tabMode==='watch'?wh:tabMode==='cicc'?ch:ph+wh+ch+eh;
 }
 
 // ═══════ 数据获取 ═══════
