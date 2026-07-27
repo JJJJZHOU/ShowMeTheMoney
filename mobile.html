@@ -68,6 +68,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:10px 24px;border-radius:24px;font-size:13px;font-weight:700;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;box-shadow:0 8px 30px rgba(240,192,96,0.3)}
 .toast.show{opacity:1}
 .ft{text-align:center;font-size:10px;color:var(--sub);padding:12px;opacity:0.5}
+.cat-head{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;margin:6px 12px 0;background:var(--card2);border-radius:10px;border:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.cat-head:active{background:rgba(240,192,96,0.1)}
+.cat-head .cn{font-size:13px;font-weight:700}
+.cat-head .cc{font-size:10px;color:var(--sub)}
+.cat-head .car{font-size:12px;color:var(--sub);transition:transform 0.2s}
+.cat-head .car.open{transform:rotate(90deg)}
+.cat-body{display:none}
+.cat-body.open{display:block}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .qc,.sc{animation:slideUp 0.3s ease-out}
 </style>
@@ -104,24 +112,45 @@ var WATCH=[
   {c:'002458',m:0,n:'益生股份'},{c:'600030',m:1,n:'中信证券'},
   {c:'000776',m:0,n:'广发证券'},{c:'601225',m:1,n:'陕西煤业'}
 ];
-var CICC=[
-  {c:'601899',m:1,n:'紫金矿业'},{c:'603993',m:1,n:'洛阳钼业'},
-  {c:'601168',m:1,n:'西部矿业'},{c:'002532',m:0,n:'天山铝业'},
-  {c:'000060',m:0,n:'锡业股份'},{c:'600549',m:1,n:'厦门钨业'},
-  {c:'000657',m:0,n:'中钨高新'},{c:'600732',m:1,n:'爱旭股份'},
-  {c:'600438',m:1,n:'福能股份'},{c:'600011',m:1,n:'华能国际'},
-  {c:'002028',m:0,n:'思源电气'},{c:'600312',m:1,n:'平高电气'},
-  {c:'601872',m:1,n:'招商轮船'},{c:'600026',m:1,n:'中远海能'},
-  {c:'002120',m:0,n:'韵达股份'},{c:'002179',m:0,n:'中航光电'},
-  {c:'600031',m:1,n:'三一重工'},{c:'002142',m:0,n:'宁波银行'},
-  {c:'600919',m:1,n:'江苏银行'},{c:'601318',m:1,n:'中国平安'},
-  {c:'601601',m:1,n:'中国太保'},{c:'002244',m:0,n:'滨江集团'},
-  {c:'002938',m:0,n:'鹏鼎控股'},{c:'002916',m:0,n:'深南电路'},
-  {c:'002371',m:0,n:'北方华创'},{c:'600066',m:1,n:'宇通客车'},
-  {c:'600519',m:1,n:'贵州茅台'},{c:'603345',m:1,n:'安井食品'},
-  {c:'002714',m:0,n:'牧原股份'},{c:'603259',m:1,n:'药明康德'},
-  {c:'002555',m:0,n:'三七互娱'},{c:'002517',m:0,n:'恺英网络'}
+var CICC_GROUPS=[
+  {cat:'有色金属',items:[
+    {c:'601899',m:1,n:'紫金矿业'},{c:'603993',m:1,n:'洛阳钼业'},
+    {c:'601168',m:1,n:'西部矿业'},{c:'002532',m:0,n:'天山铝业'},
+    {c:'000060',m:0,n:'锡业股份'},{c:'600549',m:1,n:'厦门钨业'},
+    {c:'000657',m:0,n:'中钨高新'}
+  ]},
+  {cat:'电力新能源',items:[
+    {c:'600732',m:1,n:'爱旭股份'},{c:'600438',m:1,n:'福能股份'},
+    {c:'600011',m:1,n:'华能国际'},{c:'002028',m:0,n:'思源电气'},
+    {c:'600312',m:1,n:'平高电气'}
+  ]},
+  {cat:'物流',items:[
+    {c:'601872',m:1,n:'招商轮船'},{c:'600026',m:1,n:'中远海能'},
+    {c:'002120',m:0,n:'韵达股份'}
+  ]},
+  {cat:'机械军工',items:[
+    {c:'002179',m:0,n:'中航光电'},{c:'600031',m:1,n:'三一重工'}
+  ]},
+  {cat:'银行',items:[
+    {c:'002142',m:0,n:'宁波银行'},{c:'600919',m:1,n:'江苏银行'}
+  ]},
+  {cat:'非银金融',items:[
+    {c:'601318',m:1,n:'中国平安'},{c:'601601',m:1,n:'中国太保'}
+  ]},
+  {cat:'地产',items:[{c:'002244',m:0,n:'滨江集团'}]},
+  {cat:'科技硬件',items:[
+    {c:'002938',m:0,n:'鹏鼎控股'},{c:'002916',m:0,n:'深南电路'},
+    {c:'002371',m:0,n:'北方华创'}
+  ]},
+  {cat:'汽车',items:[{c:'600066',m:1,n:'宇通客车'}]},
+  {cat:'消费',items:[
+    {c:'600519',m:1,n:'贵州茅台'},{c:'603345',m:1,n:'安井食品'}
+  ]},
+  {cat:'农林牧渔',items:[{c:'002714',m:0,n:'牧原股份'}]},
+  {cat:'医药',items:[{c:'603259',m:1,n:'药明康德'}]},
+  {cat:'传媒',items:[{c:'002555',m:0,n:'三七互娱'},{c:'002517',m:0,n:'恺英网络'}]}
 ];
+var CICC=[];CICC_GROUPS.forEach(function(g){g.items.forEach(function(s){CICC.push(s)})});
 var ETF=[
   {c:'588000',m:1,n:'科创50'},{c:'510300',m:1,n:'沪深300'},
   {c:'560080',m:1,n:'中药'},{c:'159915',m:0,n:'创业板'},
@@ -237,7 +266,11 @@ function render(){
 
   // ETF
   var eh='<div class="section-label">ETF</div>';ETF.forEach(function(s){eh+=card(s,false)});
-  var ch='<div class="section-label">中金关注</div>';CICC.forEach(function(s){ch+=card(s,false)});
+  var ch='<div class="section-label">中金 · 年内二次买点</div>';
+  CICC_GROUPS.forEach(function(g,i){
+    ch+='<div class="cat-head" onclick="toggleCat('+i+')"><div><span class="cn">'+g.cat+'</span><span class="cc"> '+g.items.length+'只</span></div><span class="car" id="car'+i+'">▶</span></div>';
+    ch+='<div class="cat-body" id="cat'+i+'">';g.items.forEach(function(s){ch+=card(s,false)});ch+='</div>';
+  });
 
   // 策略
   var sh='';
@@ -283,6 +316,7 @@ function tick(){
   if(td){c.textContent='交易中';c.className='chip live';m2.textContent='刷新间隔30秒'}else{c.textContent='盘后';c.className='chip off';m2.textContent='刷新间隔60秒'}
 }
 function loop(){clearTimeout(tmr);fetchQuotes().then(function(){tmr=setTimeout(loop,interval())}).catch(function(){tmr=setTimeout(loop,60000)})}
+function toggleCat(i){var b=document.getElementById('cat'+i),c=document.getElementById('car'+i);b.classList.toggle('open');c.classList.toggle('open')}
 function switchTab(t){tabMode=t;document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on')});document.querySelector('.tab-btn[data-t="'+t+'"]').classList.add('on');render()}
 document.addEventListener('visibilitychange',function(){clearTimeout(tmr);if(!document.hidden){fetchQuotes();tmr=setTimeout(loop,interval())}else tmr=setTimeout(loop,300000)});
 function refresh(){var t=document.getElementById('toast');t.textContent='刷新中...';t.classList.add('show');fetchQuotes().then(function(){t.textContent='已刷新';setTimeout(function(){t.classList.remove('show')},1200)})}
