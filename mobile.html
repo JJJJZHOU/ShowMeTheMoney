@@ -297,26 +297,13 @@ function render(){
   });
 
 	  // 策略
-	  var sh="";
-	  if(STRAT.bias)sh+="<div class="bias"><b>市场判断</b><br>"+STRAT.bias+"</div>";
-	  if(STRAT.pos){
-	    sh+="<div class="cat-head" onclick="toggleStrat('pos')"><div><span class="cn">持仓操作建议</span><span class="cc"> "+STRAT.pos.length+"只</span></div><span class="car" id="scar_pos">▶</span></div>";
-	    sh+="<div class="cat-body" id="sbody_pos">";STRAT.pos.forEach(function(p){sh+=stratCard(p,"pos")});sh+="</div>";
-	  }
-	  if(STRAT.new){
-	    sh+="<div class="cat-head" onclick="toggleStrat('new')"><div><span class="cn">新建仓建议</span><span class="cc"> "+STRAT.new.length+"只</span></div><span class="car" id="scar_new">▶</span></div>";
-	    sh+="<div class="cat-body" id="sbody_new">";STRAT.new.forEach(function(n){sh+=stratCard(n,"new")});sh+="</div>";
-	  }
-	  if(STRAT.watch){
-	    sh+="<div class="cat-head" onclick="toggleStrat('watch')"><div><span class="cn">关注标的策略</span><span class="cc"> "+STRAT.watch.length+"只</span></div><span class="car" id="scar_watch">▶</span></div>";
-	    sh+="<div class="cat-body" id="sbody_watch">";STRAT.watch.forEach(function(w){sh+=stratCard(w,"watch")});sh+="</div>";
-	  }
-	  if(STRAT.etf){
-	    sh+="<div class="cat-head" onclick="toggleStrat('etf')"><div><span class="cn">ETF建议</span><span class="cc"> "+STRAT.etf.length+"只</span></div><span class="car" id="scar_etf">▶</span></div>";
-	    sh+="<div class="cat-body" id="sbody_etf">";STRAT.etf.forEach(function(e){sh+=stratCard(e,"etf")});sh+="</div>";
-	  }
-	  sh+="<div class="ft">策略更新于 "+STRAT.updated+"</div>";
-
+  var sh='';
+  if(STRAT.bias)sh+='<div class="bias"><b>市场判断</b><br>'+STRAT.bias+'</div>';
+  if(STRAT.pos){sh+='<div class="cat-head" onclick="toggleStrat(\'pos\')"><div><span class="cn">持仓操作建议</span><span class="cc"> '+STRAT.pos.length+'只</span></div><span class="car" id="scar_pos">▶</span></div>';sh+='<div class="cat-body" id="sbody_pos">';STRAT.pos.forEach(function(p){sh+=stratCard(p,'pos')});sh+='</div>';}
+  if(STRAT.new){sh+='<div class="cat-head" onclick="toggleStrat(\'new\')"><div><span class="cn">新建仓建议</span><span class="cc"> '+STRAT.new.length+'只</span></div><span class="car" id="scar_new">▶</span></div>';sh+='<div class="cat-body" id="sbody_new">';STRAT.new.forEach(function(n){sh+=stratCard(n,'new')});sh+='</div>';}
+  if(STRAT.watch){sh+='<div class="cat-head" onclick="toggleStrat(\'watch\')"><div><span class="cn">关注标的策略</span><span class="cc"> '+STRAT.watch.length+'只</span></div><span class="car" id="scar_watch">▶</span></div>';sh+='<div class="cat-body" id="sbody_watch">';STRAT.watch.forEach(function(w){sh+=stratCard(w,'watch')});sh+='</div>';}
+  if(STRAT.etf){sh+='<div class="cat-head" onclick="toggleStrat(\'etf\')"><div><span class="cn">ETF建议</span><span class="cc"> '+STRAT.etf.length+'只</span></div><span class="car" id="scar_etf">▶</span></div>';sh+='<div class="cat-body" id="sbody_etf">';STRAT.etf.forEach(function(e){sh+=stratCard(e,'etf')});sh+='</div>';}
+  sh+='<div class="ft">策略更新于 '+STRAT.updated+'</div>';
   function stratCard(p,type){
     var nm=lookupName(p.c);
     return'<div class="sc"><div class="sc-head"><span class="sc-name">'+nm+' ('+p.c+')</span><span class="sc-badge" style="background:'+(p.cl||'#f0c060')+'15;color:'+(p.cl||'#f0c060')+'">'+(p.sg||p.act)+'</span></div><div class="sc-note"><b>'+(p.act||'')+'</b> · '+(p.note||'')+'</div><div class="sc-grid"><div class="sc-gi"><div class="lbl">入场</div><div class="val">'+(p.entry||'-')+'</div></div><div class="sc-gi"><div class="lbl">止损</div><div class="val" style="color:#ff4757">'+(p.stop||'-')+'</div></div><div class="sc-gi full"><div class="lbl">目标</div><div class="val">'+(p.target||'-')+'</div></div></div></div>';
@@ -352,7 +339,7 @@ function tick(){
   if(td){c.textContent='交易中';c.className='chip live';m2.textContent='刷新间隔30秒'}else{c.textContent='盘后';c.className='chip off';m2.textContent='刷新间隔60秒'}
 }
 function loop(){clearTimeout(tmr);fetchQuotes().then(function(){tmr=setTimeout(loop,interval())}).catch(function(){tmr=setTimeout(loop,60000)})}
-function toggleStrat(id){var b=document.getElementById('sbody_'+id);var c=document.getElementById('scar_'+id);b.classList.toggle('open');c.classList.toggle('open')}
+function toggleStrat(id){var b=document.getElementById('sbody_'+id),c=document.getElementById('scar_'+id);b.classList.toggle('open');c.classList.toggle('open')}
 function toggleCat(i){var b=document.getElementById('cat'+i),c=document.getElementById('car'+i);b.classList.toggle('open');c.classList.toggle('open')}
 function switchTab(t){tabMode=t;document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('on')});document.querySelector('.tab-btn[data-t="'+t+'"]').classList.add('on');render()}
 document.addEventListener('visibilitychange',function(){clearTimeout(tmr);if(!document.hidden){fetchQuotes();tmr=setTimeout(loop,interval())}else tmr=setTimeout(loop,300000)});
