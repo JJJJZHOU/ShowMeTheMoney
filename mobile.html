@@ -294,10 +294,10 @@ function render(){
 	  // 策略
   var sh='';
   if(STRAT.bias)sh+='<div class="bias"><b>市场判断</b><br>'+STRAT.bias+'</div>';
-  if(STRAT.pos){sh+='<div class="cat-head" onclick="toggleStrat(\'pos\')"><div><span class="cn">持仓操作建议</span><span class="cc"> '+STRAT.pos.length+'只</span></div><span class="car" id="scar_pos">▶</span></div>';sh+='<div class="cat-body" id="sbody_pos">';STRAT.pos.forEach(function(p){sh+=stratCard(p,'pos')});sh+='</div>';}
-  if(STRAT.new){sh+='<div class="cat-head" onclick="toggleStrat(\'new\')"><div><span class="cn">新建仓建议</span><span class="cc"> '+STRAT.new.length+'只</span></div><span class="car" id="scar_new">▶</span></div>';sh+='<div class="cat-body" id="sbody_new">';STRAT.new.forEach(function(n){sh+=stratCard(n,'new')});sh+='</div>';}
-  if(STRAT.watch){sh+='<div class="cat-head" onclick="toggleStrat(\'watch\')"><div><span class="cn">关注标的策略</span><span class="cc"> '+STRAT.watch.length+'只</span></div><span class="car" id="scar_watch">▶</span></div>';sh+='<div class="cat-body" id="sbody_watch">';STRAT.watch.forEach(function(w){sh+=stratCard(w,'watch')});sh+='</div>';}
-  if(STRAT.etf){sh+='<div class="cat-head" onclick="toggleStrat(\'etf\')"><div><span class="cn">ETF建议</span><span class="cc"> '+STRAT.etf.length+'只</span></div><span class="car" id="scar_etf">▶</span></div>';sh+='<div class="cat-body" id="sbody_etf">';STRAT.etf.forEach(function(e){sh+=stratCard(e,'etf')});sh+='</div>';}
+  if(STRAT.pos){sh+='<div class="cat-head" onclick="toggleStrat('pos')"><div><span class="cn">持仓操作建议</span><span class="cc"> '+STRAT.pos.length+'只</span></div><span class="car" id="scar_pos">▶</span></div>';sh+='<div class="cat-body" id="sbody_pos">';STRAT.pos.forEach(function(p){sh+=stratCard(p,'pos')});sh+='</div>';}
+  if(STRAT.new){sh+='<div class="cat-head" onclick="toggleStrat('new')"><div><span class="cn">新建仓建议</span><span class="cc"> '+STRAT.new.length+'只</span></div><span class="car" id="scar_new">▶</span></div>';sh+='<div class="cat-body" id="sbody_new">';STRAT.new.forEach(function(n){sh+=stratCard(n,'new')});sh+='</div>';}
+  if(STRAT.watch){sh+='<div class="cat-head" onclick="toggleStrat('watch')"><div><span class="cn">关注标的策略</span><span class="cc"> '+STRAT.watch.length+'只</span></div><span class="car" id="scar_watch">▶</span></div>';sh+='<div class="cat-body" id="sbody_watch">';STRAT.watch.forEach(function(w){sh+=stratCard(w,'watch')});sh+='</div>';}
+  if(STRAT.etf){sh+='<div class="cat-head" onclick="toggleStrat('etf')"><div><span class="cn">ETF建议</span><span class="cc"> '+STRAT.etf.length+'只</span></div><span class="car" id="scar_etf">▶</span></div>';sh+='<div class="cat-body" id="sbody_etf">';STRAT.etf.forEach(function(e){sh+=stratCard(e,'etf')});sh+='</div>';}
   sh+='<div class="ft">策略更新于 '+STRAT.updated+'</div>';
   function stratCard(p,type){
     var nm=lookupName(p.c);
