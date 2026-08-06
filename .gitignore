@@ -1,0 +1,5 @@
+.claude/
+temp_*.py
+output/
+*.md
+!dashboard/README.md
