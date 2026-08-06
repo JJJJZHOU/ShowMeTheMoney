@@ -1,5 +1,6 @@
+*.py
 .claude/
-temp_*.py
 output/
 *.md
-!dashboard/README.md
+!README.md
+temp_*
